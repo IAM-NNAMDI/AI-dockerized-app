@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from groq import Groq
 from dotenv import load_dotenv
 import os
+from flask import render_template
 
 # Load environment variables from .env file
 load_dotenv()
@@ -18,7 +19,7 @@ client = Groq(
 
 @app.route('/')
 def home():
-    return "AI Flask App Running!"
+    return render_template("index.html")
 
 @app.route('/ai', methods=['POST'])
 def ai():

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Chat</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+        }
+
+        #chat-box {
+            width: 60%;
+            margin: 20px auto;
+            padding: 10px;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            background: #1e293b;
+        }
+
+        input {
+            width: 50%;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .user { color: #38bdf8; }
+        .bot { color: #22c55e; }
+    </style>
+</head>
+<body>
+
+<h1>🤖 AI Chat App</h1>
+
+<div id="chat-box"></div>
+
+<input type="text" id="message" placeholder="Type your message..." />
+<button onclick="sendMessage()">Send</button>
+
+<script>
+async function sendMessage() {
+    let input = document.getElementById("message");
+    let msg = input.value;
+
+    if (!msg) return;
+
+    let chatBox = document.getElementById("chat-box");
+
+    // Show user message
+    chatBox.innerHTML += `<p class="user"><b>You:</b> ${msg}</p>`;
+
+    input.value = "";
+
+    // Send to Flask API
+    let res = await fetch("/ai", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: msg })
+    });
+
+    let data = await res.json();
+
+    // Show AI response
+    chatBox.innerHTML += `<p class="bot"><b>AI:</b> ${data.response}</p>`;
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+</script>
+
+</body>
+</html>
